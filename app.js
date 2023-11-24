@@ -4,9 +4,13 @@ const express = require('express'); //La constante express importa la libreria p
 const app = express(); //La constante app settea el plugin de conexion express
 const port = 3000; //Puerto en el que se ejecuta el servidor
 
-//Rutas - Ejemplos (End points iniciales)
-app.use(bodyParser.urlencoded({extended: false})); //Parsea en JSON datos entregados en URL
+// Rutas - Ejemplos (End points iniciales)
+app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
+
+// Controladores para las colecciones 'user' y 'userType'
+app.use(require('./controllers/userController'));
+app.use(require('./controllers/userTypeController'));
 
 //Funcion que conecta a la DB usando la URL del sevidor de mongoose
 mongoose.connect('mongodb+srv://JDVM:EY85oVuSZkVjYxhk@cluster0.p2ovi4c.mongodb.net/?retryWrites=true&w=majority', {
