@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 // Definir el esquema para la colección 'userType'
 const userTypeSchema = new mongoose.Schema({
   nickName: { type: String, required: [true, 'a nickname is required']},
-  interestCategory: [{ type: Schema.Types.ObjectId, ref: 'categorys',  required: [true, 'an category is required']}],
+  interestCategory: [{ type: Schema.Types.ObjectId, ref: 'Categories',  required: [true, 'an category is required']}],
   status: { type: boolean, default: true}
 });
 
