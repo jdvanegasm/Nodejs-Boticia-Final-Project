@@ -13,10 +13,7 @@ app.use(require('./controllers/userController'));
 app.use(require('./controllers/userTypeController'));
 
 //Funcion que conecta a la DB usando la URL del sevidor de mongoose
-mongoose.connect('mongodb+srv://JDVM:EY85oVuSZkVjYxhk@cluster0.p2ovi4c.mongodb.net/?retryWrites=true&w=majority', {
-    useUnifiedTopology: true, //Variable de uso para recibir datos
-    useNewUrlParser: true //Variable de uso para parsear datos
-})
+mongoose.connect('mongodb+srv://JDVM:EY85oVuSZkVjYxhk@cluster0.p2ovi4c.mongodb.net/?retryWrites=true&w=majority')
     .then(() => console.log('mongodb connection up'))
     .catch(error => console.log(`unable to connect to mongodb: ${error.message}`));
 
