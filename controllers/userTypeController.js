@@ -1,12 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const UserType = require('../models/userType');
-const UserTypeDTO = require('../dtos/userTypeDTO');
+const userTypeModel = require('../models/userTypeModel');
 
 //routes
-app.post('/createUserType', userTypeModel.createUserType);
-app.post('/getUserType', userTypeModel.getUserType);
-app.put('/updateUserType/:id', userTypeModel.updateUserType);
-app.put('/deleteUserType/:id', userTypeModel.deleteUserType)
+router.post('/createUserType', userTypeModel.createUserType);
+router.post('/getUserType', userTypeModel.getUserType);
+router.put('/updateUserType/:id', userTypeModel.updateUserType);
+router.put('/deleteUserType/:id', userTypeModel.deleteUserType)
 
 module.exports = router;

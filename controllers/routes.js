@@ -3,7 +3,7 @@ const app = express();
 
 app.use('/userTypeController', require('./userTypeController'));
 app.use('/userController', require('./userController'));
-app.use('/newsController', required('./newsController'));
-app.use('/categoryController', required('./categoryController'));
+app.use('/newsController', require('./newsController'));
+app.use('/categoryController', require('./categoryController'));
 
 module.exports = app;

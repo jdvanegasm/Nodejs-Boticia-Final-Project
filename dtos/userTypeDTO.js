@@ -1,11 +1,12 @@
 // DTO para la colección 'userType'
 const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
 // Definir el esquema para la colección 'userType'
 const userTypeSchema = new mongoose.Schema({
   nickName: { type: String, required: [true, 'a nickname is required']},
   interestCategory: [{ type: Schema.Types.ObjectId, ref: 'Categories',  required: [true, 'an category is required']}],
-  status: { type: boolean, default: true}
+  status: { type: Boolean, default: true}
 });
 
 // Crear el modelo 'UserType' basado en el esquema
