@@ -33,7 +33,7 @@ async function createUserType(req, res){
 async function getUserType(req, res){
     try{
         await userModel.verifyToken(req,res);
-        const userTypes = await userTypes.findOne({_id: req.body._id});
+        const userTypes = await UserType.findOne({_id: req.body._id});
         res.status(200).json({userTypes});
     } catch(error){
         res.status(500).json({ error: error.message });
@@ -50,7 +50,7 @@ async function updateUserType(req, res){
 
     try{
         await userModel.verifyToken(req,res);
-        const result = await userType.findOneAndUpdate({ _id: userTypeId}, { $set: updatedData });
+        const result = await UserType.findOneAndUpdate({ _id: userTypeId}, { $set: updatedData });
         console.log(result);
         if (result) {
             res.status(200).json({
@@ -81,7 +81,7 @@ async function deleteUserType(req, res){
 
     try{
         await userModel.verifyToken(req,res);
-        const result = await userType.findOneAndUpdate({ _id: userTypeId}, { $set: deleteData });
+        const result = await UserType.findOneAndUpdate({ _id: userTypeId}, { $set: deleteData });
         console.log(result);
         if (result) {
             res.status(200).json({
