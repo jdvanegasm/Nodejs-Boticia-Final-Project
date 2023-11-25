@@ -126,38 +126,69 @@ async function getUser(req, res) {
     }
 }
 
-async function updateUser(req, res) {
-    const userId = req.params.id;
-
-    bcrypt.hash(req.body.password, saltRounds, (err, hashedPassword) => {
-        if (err) {
-            return res.status(500).json({
-                result: false,
-                message: `Fatal error: ${err}`
-            });
-        }
-    });
-
-    const updatedData = {
-        discordUserName: req.body.discordUserName,
-        password: hashedPassword,
-        userType: req.body.userType,
-    };
-
+async function getUserByName(req, res) {
     try {
-        await verifyToken(req, res);
-        const result = await User.findOneAndUpdate({ _id: userId }, { $set: updatedData });
-        console.log(result);
+        const usuarios = await Usuario.findOne({discordUserName: req.params.discordUserName});
+        res.status(200).json({  usuarios });
+    } catch (error) {
+        res.status(500).json({
+            error: true,
+            message: `Server error: ${error}`,
+            code: 0
+        });
+    }
+}
 
-        if (result) {
-            res.status(200).json({
-                result: true,
-                message: 'The user has been modified'
+async function updateUser(req, res) {
+    try {
+        const userId = req.params.id;
+        await verifyToken(req, res);
+        if(req.body.password){
+            bcrypt.hash(req.body.password, saltRounds, (err, hashedPassword) => {
+                if (err) {
+                    return res.status(500).json({
+                        result: false,
+                        message: `Fatal error: ${err}`
+                    });
+                }
+                
+
+                const updatedData = {
+                    discordUserName: req.body.discordUserName,
+                    password: hashedPassword,
+                    userType: req.body.userType,
+                };
+                User.findOneAndUpdate({ _id: userId }, { $set: updatedData }).then(result => {
+                    res.status(200).json({
+                        error: false,
+                        message: 'The user has been updated',
+                        data: result
+                    });
+                })
+                .catch(error => {
+                    res.status(404).json({
+                        error: true,
+                        message: `Fatal error: ${error}`
+                    });
+                });
             });
-        } else {
-            res.status(404).json({
-                result: false,
-                message: 'Id doesnt match, try again later'
+        }else{
+            const updatedData = {
+                discordUserName: req.body.discordUserName,
+                userType: req.body.userType,
+            };
+            User.findOneAndUpdate({ _id: userId }, { $set: updatedData }).then(result => {
+                res.status(200).json({
+                    error: false,
+                    message: 'The user has been updated',
+                    data: result
+                });
+            })
+            .catch(error => {
+                res.status(404).json({
+                    error: true,
+                    message: `Fatal error: ${error}`
+                });
             });
         }
     } catch (error) {
@@ -204,6 +235,7 @@ async function deleteUser(req, res) {
 module.exports = {
     createUser,
     getUser,
+    getUserByName,
     updateUser,
     deleteUser,
     login,
