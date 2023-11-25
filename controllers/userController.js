@@ -60,10 +60,110 @@ const userModel = require('../models/userModel');
  * 
  */
 router.post('/createUser', userModel.createUser);
+
+/**
+ * @swagger
+ * /user/getUser:
+ *  post:
+ *      summary: Trae un usuario según su id
+ *      tags: [User]
+ *      requestBody:
+ *          required: true
+ *          content:
+ *           application/json:
+ *              schema:
+ *                  type: object
+ *                  $ref: '#/components/schemas/User'
+ *      responses:
+ *          200:
+ *              description: User encontrado
+ *          500:
+ *              description: User no encontrado
+ *                  
+ * 
+ */
 router.post('/getUser', userModel.getUser);
+
+/**
+ * @swagger
+ * /user/getUser/:discordId:
+ *  get:
+ *      summary: Trae un usuario según su discordId
+ *      tags: [User]
+ *      requestBody:
+ *          required: false
+ *      responses:
+ *          200:
+ *              description: User encontrado
+ *          500:
+ *              description: User no encontrado
+ *                  
+ * 
+ */
 router.get('/getUser/:discordId', userModel.getUserByDiscordId);
+
+/**
+ * @swagger
+ * /user/updateUser/:id:
+ *  put:
+ *      summary: Actualiza un usuario según su id
+ *      tags: [User]
+ *      requestBody:
+ *          required: true
+ *          content:
+ *           application/json:
+ *              schema:
+ *                  type: object
+ *                  $ref: '#/components/schemas/User'
+ *      responses:
+ *          200:
+ *              description: User actualizado
+ *          404:
+ *              description: Error en base de datos, no actualizado
+ *                  
+ * 
+ */
 router.put('/updateUser/:id', userModel.updateUser);
+
+/**
+ * @swagger
+ * /user/deleteUser/:id:
+ *  put:
+ *      summary: Actualiza status false según id de User
+ *      tags: [User]
+ *      requestBody:
+ *          required: false
+ *      responses:
+ *          200:
+ *              description: User status actualizado
+ *          404:
+ *              description: Error interno, no se puede eliminar
+ *                  
+ * 
+ */
 router.put('/deleteUser/:id', userModel.deleteUser);
+
+/**
+ * @swagger
+ * /user/login:
+ *  post:
+ *      summary: Logea un usuario
+ *      tags: [User]
+ *      requestBody:
+ *          required: true
+ *          content:
+ *           application/json:
+ *              schema:
+ *                  type: object
+ *                  $ref: '#/components/schemas/User'
+ *      responses:
+ *          200:
+ *              description: User logeado
+ *          401:
+ *              description: Error no se pudo logear
+ *                  
+ * 
+ */
 router.post('/login', userModel.login);
 
 module.exports = router;

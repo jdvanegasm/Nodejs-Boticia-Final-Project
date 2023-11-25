@@ -73,7 +73,7 @@ async function login(req, res) {
             });
         }
     } catch (error) {
-        res.status(500).json({
+        res.status(401).json({
             error: true,
             message: `Fatal error: ${error}`,
             code: 0
