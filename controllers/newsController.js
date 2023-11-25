@@ -7,7 +7,7 @@ const newsModel = require('../models/newsModel');
  * @swagger
  * components:
  *  schemas:
- *      News:
+ *      news:
  *          type: object
  *          properties:
  *              title:
@@ -40,17 +40,17 @@ const newsModel = require('../models/newsModel');
  */
 /**
  * @swagger
- * /News/createNews:
+ * /news/createNews:
  *  post:
  *      summary: Crea una nueva noticia
- *      tags: [News]
+ *      tags: [news]
  *      requestBody:
  *          required: true
  *          content:
  *           application/json:
  *              schema:
  *                  type: object
- *                  $ref: '#/components/schemas/News'
+ *                  $ref: '#/components/schemas/news'
  *      responses:
  *          201:
  *              description: Noticia creada
@@ -63,17 +63,17 @@ router.post('/createNews', newsModel.createNews);
 
 /**
  * @swagger
- * /News/getNews:
+ * /news/getNews:
  *  post:
  *      summary: Trae una noticia por _id
- *      tags: [News]
+ *      tags: [news]
  *      requestBody:
  *          required: true
  *          content:
  *           application/json:
  *              schema:
  *                  type: object
- *                  $ref: '#/components/schemas/News'
+ *                  $ref: '#/components/schemas/news'
  *      responses:
  *          200:
  *              description: Noticia encontrada
@@ -86,10 +86,10 @@ router.post('/getNews', newsModel.getNews);
 
 /**
  * @swagger
- * /News/updateNews/:id:
+ * /news/updateNews/:id:
  *  put:
  *      summary: Actualiza una noticia según su id
- *      tags: [News]
+ *      tags: [news]
  *      requestBody:
  *          required: true
  *          content:
@@ -109,10 +109,10 @@ router.put('/updateNews/:id', newsModel.updateNews);
 
 /**
  * @swagger
- * /News/deleteNews/:id:
+ * /news/deleteNews/:id:
  *  put:
  *      summary: Actualiza status false según id de Noticia
- *      tags: [News]
+ *      tags: [news]
  *      requestBody:
  *          required: false
  *      responses:
