@@ -6,7 +6,7 @@ const Schema = mongoose.Schema;
 const userSchema = new mongoose.Schema({
   discordUserName: {type: String, required: [true, "a nickname is required"]},
   password: {type: String, required: [true, "a password is required"]},
-  userType: { type: Schema.Types.ObjectId, ref: 'userTypes',  required: [true, 'an userType is required'] },
+  userType: { type: Schema.Types.ObjectId, ref: 'userTypes',  default: '656195c060ab4b406856c978' },
   status: { type: Boolean, default: true}
 });
 

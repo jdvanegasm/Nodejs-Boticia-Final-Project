@@ -19,8 +19,9 @@ async function createUser(req, res) {
             }
             const user = new User({
                 discordUserName: req.body.discordUserName,
+                discordId: req.body.discordId,
                 password: hashedPassword,
-                userType: req.body.userType,
+                userType: req.body.userType
             });
             user.save()
             .then(result => {
@@ -47,11 +48,11 @@ async function createUser(req, res) {
 }
 
 async function login(req, res) {
-    const { discordUserName, password } = req.body;
+    const { discordId, password } = req.body;
 
     try {
         // Buscar el usuario por discordusername y estado activo
-        const user = await User.findOne({ discordUserName, status: true });
+        const user = await User.findOne({ discordId, status: true });
 
         // Verificar si el usuario existe y la contraseña es válida
         if (user && await bcrypt.compare(password, user.password)) {
@@ -62,19 +63,19 @@ async function login(req, res) {
 
             res.status(200).json({
                 error: false,
-                message: 'Inicio de sesión exitoso',
+                message: 'Login',
                 token
             });
         } else {
             res.status(401).json({
                 error: true,
-                message: 'DiscordUsername o contraseña incorrectos'
+                message: 'Invalid discordId or password '
             });
         }
     } catch (error) {
         res.status(500).json({
             error: true,
-            message: `Error en el servidor: ${error}`,
+            message: `Fatal error: ${error}`,
             code: 0
         });
     }
@@ -96,7 +97,7 @@ async function verifyToken(req, res) {
     
     // Verificar si el token está presente
     if (!token) {
-        throw new Error('Acces token has not given');
+        throw new Error('Access token has not given');
     }
 
     // Utiliza la promesa devuelta por jwt.verify para manejar la asincronía
@@ -155,6 +156,7 @@ async function updateUser(req, res) {
 
                 const updatedData = {
                     discordUserName: req.body.discordUserName,
+                    discordId: req.body.discordId,
                     password: hashedPassword,
                     userType: req.body.userType,
                 };
@@ -175,6 +177,7 @@ async function updateUser(req, res) {
         }else{
             const updatedData = {
                 discordUserName: req.body.discordUserName,
+                discordId: req.body.discordId,
                 userType: req.body.userType
             };
             User.findOneAndUpdate({ _id: userId }, { $set: updatedData }).then(result => {
@@ -215,7 +218,7 @@ async function deleteUser(req, res) {
         if (result) {
             res.status(200).json({
                 resultado: true,
-                message: 'The user has been modified'
+                message: 'The user has been deleted'
             });
         } else {
             res.status(404).json({
