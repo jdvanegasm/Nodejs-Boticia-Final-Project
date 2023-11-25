@@ -127,9 +127,9 @@ async function getUser(req, res) {
     }
 }
 
-async function getUserByName(req, res) {
+async function getUserByDiscordId(req, res) {
     try {
-        const user = await User.findOne({discordUserName: req.params.discordUserName});
+        const user = await User.findOne({discordId: req.params.discordId});
         res.status(200).json({  user });
     } catch (error) {
         res.status(500).json({
@@ -238,7 +238,7 @@ async function deleteUser(req, res) {
 module.exports = {
     createUser,
     getUser,
-    getUserByName,
+    getUserByDiscordId,
     updateUser,
     deleteUser,
     login,
