@@ -22,6 +22,7 @@ const swaggerSpec = {
       ],
     },
     apis: [`${path.join(__dirname, "./controllers/*.js")}`] 
+
 }
 // Rutas - Ejemplos (End points iniciales)
 app.use(bodyParser.urlencoded({extended: false}));
