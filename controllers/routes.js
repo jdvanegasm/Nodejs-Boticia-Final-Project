@@ -1,9 +1,9 @@
 const express = require('express');
 const app = express();
 
-app.use('/userTypeController', require('./userTypeController'));
-app.use('/userController', require('./userController'));
-app.use('/newsController', require('./newsController'));
-app.use('/categoryController', require('./categoryController'));
+app.use('/userType', require('./userTypeController'));
+app.use('/user', require('./userController'));
+app.use('/news', require('./newsController'));
+app.use('/category', require('./categoryController'));
 
 module.exports = app;

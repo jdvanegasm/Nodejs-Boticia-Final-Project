@@ -4,9 +4,8 @@ const userType = require('../dtos/userTypeDTO');
 
 async function createUserType(req, res){
     try{
-        const { nickName, interestCategory, status } = req.body;
-        const newUserTypeDTO = new UserTypeDTO(nickName, interestCategory, status);
-        const newUserType = new UserType(newUserTypeDTO);
+        const { nickName , interestCategory } = req.body;
+        const newUserType = new userType(nickName, interestCategory);
         const result = await newUserType.save();
         res.json(result);
     } catch (error) {
