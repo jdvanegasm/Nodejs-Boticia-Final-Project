@@ -1,17 +1,25 @@
-const express = require('express');
-const router = express.Router();
 const News = require('../dtos/newsDTO');
 
 async function createNews(req, res){
-    try{
-        const { title, url, source, newsCategories } = req.body;
-        const newNewsDTO = new newsDTO(title, url, source, newsCategories);
-        const newNews = new News(newNewsDTO);
-        const result = await newNews.save();
-        res.json(result);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
+    const news = new News({
+        title: req.body.title,
+        url: req.body.url,
+        source: req.body.source,
+        newsCategory: req.body.newsCategory
+    });
+    news.save()
+    .then((result) => {
+        res.status(201).json({
+        error: false,
+        message: "The news have been created",
+        data: result,
+        });
+    }).catch((error) => {
+        res.status(404).json({
+            error: true,
+            message: `Server error: ${error}`,
+        });
+    });
 }
 
 async function getNews(req, res){

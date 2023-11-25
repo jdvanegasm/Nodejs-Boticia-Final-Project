@@ -1,16 +1,23 @@
-const express = require('express');
-const router = express.Router();
-const userType = require('../dtos/userTypeDTO');
+const UserType = require('../dtos/userTypeDTO');
 
 async function createUserType(req, res){
-    try{
-        const { nickName , interestCategory } = req.body;
-        const newUserType = new userType(nickName, interestCategory);
-        const result = await newUserType.save();
-        res.json(result);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
+    const userType = new UserType({
+        nickName: req.body.nickName,
+        interestCategory: req.body.interestCategory
+    });
+    userType.save()
+    .then((result) => {
+        res.status(201).json({
+        error: false,
+        message: "The UserType has been created",
+        data: result,
+        });
+    }).catch((error) => {
+        res.status(404).json({
+            error: true,
+            message: `Server error: ${error}`,
+        });
+    });
 }
 
 async function getUserType(req, res){

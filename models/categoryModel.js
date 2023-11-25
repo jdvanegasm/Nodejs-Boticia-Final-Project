@@ -1,24 +1,28 @@
-
-const express = require('express');
-const router = express.Router();
 const Category = require('../dtos/categoryDTO');
 
 async function createCategory(req, res){
-    try{
-        const { name } = req.body;
-        const newCategoryDTO = new categoryDTO (name);
-        const newCategory = new Category(newCategoryDTO);
-        const result = await newCategory.save();
-        res.json(result);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
+    const category = new Category({
+        categoryName: req.body.categoryName
+    });
+    category.save()
+    .then((result) => {
+        res.status(201).json({
+        error: false,
+        message: "The Category has been created",
+        data: result,
+        });
+    }).catch((error) => {
+        res.status(404).json({
+            error: true,
+            message: `Server error: ${error}`,
+        });
+    });
 }
 
 async function getCategory(req, res){
     try{
         const category = await Category.findOne({_id: req.body._id});
-        res.status(200).json({news});
+        res.status(200).json({category});
     } catch(error){
         res.status(500).json({ error: error.message });
     }
@@ -32,7 +36,7 @@ async function updateCategory (req, res){
     };
 
     try{
-        const result = await Cateogry.findOneAndUpdate({ _id: newsId}, { $set: updatedData });
+        const result = await Category.findOneAndUpdate({ _id: categoryId}, { $set: updatedData });
         console.log(result);
         if (result) {
             res.status(200).json({

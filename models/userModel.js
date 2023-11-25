@@ -6,7 +6,9 @@ const saltRounds = 10; // Número de rondas de sal. Cuanto mayor, más seguro, p
 async function createUser(req, res) {
     try{
         // Espera a que se complete la verificación del token
-        await verifyToken(req, res);
+
+        //await verifyToken(req, res);
+
         // Generar un hash de la contraseña antes de almacenarla
         bcrypt.hash(req.body.pss, saltRounds, (err, hashedPassword) => {
             if (err) {
@@ -42,6 +44,53 @@ async function createUser(req, res) {
             code: 0
         });
     }
+}
+
+async function login(req, res) {
+    const { discordUserName, password } = req.body;
+
+    try {
+        // Buscar el usuario por discordusername y estado activo
+        const user = await User.findOne({ discordUserName, status: true });
+
+        // Verificar si el usuario existe y la contraseña es válida
+        if (user && await bcrypt.compare(password, user.password)) {
+            
+
+            // Generar un token con el ID del usuario y la clave de sesión
+            const token = generateToken(user._id);
+
+            res.status(200).json({
+                error: false,
+                message: 'Inicio de sesión exitoso',
+                token
+            });
+        } else {
+            res.status(401).json({
+                error: true,
+                message: 'DiscordUsername o contraseña incorrectos'
+            });
+        }
+    } catch (error) {
+        res.status(500).json({
+            error: true,
+            message: `Error en el servidor: ${error}`,
+            code: 0
+        });
+    }
+}
+
+function generateToken(userId) {
+
+    // Incluye la clave de sesión como parte de la información del token
+    const payload = { userId };
+    
+    // Firma el token utilizando la clave secreta del servidor y la clave de sesión única
+    const token = jwt.sign(payload, process.env.SERVER_SECRET_KEY
+    //,{ expiresIn : '1h' }
+    );
+    
+    return token;
 }
 
 async function getUser(req, res) {
