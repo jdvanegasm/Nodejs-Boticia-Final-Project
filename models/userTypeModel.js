@@ -78,7 +78,7 @@ async function deleteUserType(req, res){
     } catch(error){
         res.status(500).json({
             result: false,
-            message: 'An error has been ocurred while the user was modified',
+            message: 'An error has been ocurred while the user was deleted',
             error: error 
         });
     }
