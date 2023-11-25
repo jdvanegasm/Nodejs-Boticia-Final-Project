@@ -64,7 +64,7 @@ async function updateUserType(req, res){
             });
         }
     } catch(error){
-        res.status(500).json({
+        res.status(404).json({
             result: false,
             message: 'An error has been ocurred while the user was modified',
             error: error

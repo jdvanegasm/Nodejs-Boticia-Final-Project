@@ -26,11 +26,10 @@ const userModel = require('../models/userModel');
  *                  type: Boolean
  *                  description: Estado del usuario
  *          required:
- *              - name
- *              - email
- *              - pss
+ *              - discordUserName
+ *              - password
  *          example:
- *              discorUsername: __nous
+ *              discorUserName: __nous
  *              email: 610207942326878210
  *              password: 12345
  *              userType: 656195c060ab4b406856c978
