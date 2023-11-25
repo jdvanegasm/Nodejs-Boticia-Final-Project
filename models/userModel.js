@@ -128,8 +128,8 @@ async function getUser(req, res) {
 
 async function getUserByName(req, res) {
     try {
-        const usuarios = await Usuario.findOne({discordUserName: req.params.discordUserName});
-        res.status(200).json({  usuarios });
+        const user = await User.findOne({discordUserName: req.params.discordUserName});
+        res.status(200).json({  user });
     } catch (error) {
         res.status(500).json({
             error: true,
@@ -175,7 +175,7 @@ async function updateUser(req, res) {
         }else{
             const updatedData = {
                 discordUserName: req.body.discordUserName,
-                userType: req.body.userType,
+                userType: req.body.userType
             };
             User.findOneAndUpdate({ _id: userId }, { $set: updatedData }).then(result => {
                 res.status(200).json({
