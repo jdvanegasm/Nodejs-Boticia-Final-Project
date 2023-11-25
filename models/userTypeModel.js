@@ -1,27 +1,38 @@
 const UserType = require('../dtos/userTypeDTO');
+const userModel = require('./userModel')
 
 async function createUserType(req, res){
-    const userType = new UserType({
-        nickName: req.body.nickName,
-        interestCategory: req.body.interestCategory
-    });
-    userType.save()
-    .then((result) => {
-        res.status(201).json({
-        error: false,
-        message: "The UserType has been created",
-        data: result,
+    try{
+        await userModel.verifyToken(req,res);
+        const userType = new UserType({
+            nickName: req.body.nickName,
+            interestCategory: req.body.interestCategory
         });
-    }).catch((error) => {
-        res.status(404).json({
+        userType.save()
+        .then((result) => {
+            res.status(201).json({
+            error: false,
+            message: "The UserType has been created",
+            data: result,
+            });
+        }).catch((error) => {
+            res.status(404).json({
+                error: true,
+                message: `Server error: ${error}`,
+            });
+        });
+    }catch(error){
+        res.status(500).json({
             error: true,
-            message: `Server error: ${error}`,
+            message: `Fatal Error: ${error}`,
+            code: 0
         });
-    });
+    }
 }
 
 async function getUserType(req, res){
     try{
+        await userModel.verifyToken(req,res);
         const userTypes = await userTypes.findOne({_id: req.body._id});
         res.status(200).json({userTypes});
     } catch(error){
@@ -38,6 +49,7 @@ async function updateUserType(req, res){
     };
 
     try{
+        await userModel.verifyToken(req,res);
         const result = await userType.findOneAndUpdate({ _id: userTypeId}, { $set: updatedData });
         console.log(result);
         if (result) {
@@ -68,6 +80,7 @@ async function deleteUserType(req, res){
     }
 
     try{
+        await userModel.verifyToken(req,res);
         const result = await userType.findOneAndUpdate({ _id: userTypeId}, { $set: deleteData });
         console.log(result);
         if (result) {

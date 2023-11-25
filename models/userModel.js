@@ -7,10 +7,10 @@ async function createUser(req, res) {
     try{
         // Espera a que se complete la verificación del token
 
-        //await verifyToken(req, res);
+        await verifyToken(req, res);
 
         // Generar un hash de la contraseña antes de almacenarla
-        bcrypt.hash(req.body.pss, saltRounds, (err, hashedPassword) => {
+        bcrypt.hash(req.body.password, saltRounds, (err, hashedPassword) => {
             if (err) {
                 return res.status(500).json({
                     error: true,
@@ -20,7 +20,7 @@ async function createUser(req, res) {
             const user = new User({
                 discordUserName: req.body.discordUserName,
                 password: hashedPassword,
-                userType: require.body.userType,
+                userType: req.body.userType,
             });
             user.save()
             .then(result => {
@@ -81,21 +81,41 @@ async function login(req, res) {
 }
 
 function generateToken(userId) {
-
     // Incluye la clave de sesión como parte de la información del token
     const payload = { userId };
     
     // Firma el token utilizando la clave secreta del servidor y la clave de sesión única
-    const token = jwt.sign(payload, process.env.SERVER_SECRET_KEY
-    //,{ expiresIn : '1h' }
-    );
+    const token = jwt.sign(payload, process.env.SERVER_SECRET_KEY,{ expiresIn : '3h' });
     
     return token;
 }
 
+async function verifyToken(req, res) {
+    // Obtener el token del encabezado 'Authorization'
+    const token = req.headers.authorization;
+    
+    // Verificar si el token está presente
+    if (!token) {
+        throw new Error('Acces token has not given');
+    }
+
+    // Utiliza la promesa devuelta por jwt.verify para manejar la asincronía
+    return new Promise((resolve, reject) => {
+        jwt.verify(token, process.env.SERVER_SECRET_KEY, (err, decoded) => {
+            if (err) {
+                reject(new Error('Invalid access token. Try to login later.'));
+            }
+            // Añade la información del usuario decodificado al objeto de solicitud (req)
+            req.user = decoded;
+            resolve(); // Resuelve la promesa si la verificación del token es exitosa
+        });
+    });
+}
+
 async function getUser(req, res) {
     try {
-        const user = await User.findOne({_id: req.body.id});
+        await verifyToken(req, res);
+        const user = await User.findOne({_id: req.body._id});
         res.status(200).json({  user });
     } catch (error) {
         res.status(500).json({
@@ -125,6 +145,7 @@ async function updateUser(req, res) {
     };
 
     try {
+        await verifyToken(req, res);
         const result = await User.findOneAndUpdate({ _id: userId }, { $set: updatedData });
         console.log(result);
 
@@ -156,6 +177,7 @@ async function deleteUser(req, res) {
     };
 
     try {
+        await verifyToken(req, res);
         const result = await User.findOneAndUpdate({ _id: userId }, { $set: updatedData });
         console.log(result);
 
@@ -183,5 +205,7 @@ module.exports = {
     createUser,
     getUser,
     updateUser,
-    deleteUser
+    deleteUser,
+    login,
+    verifyToken
 }

@@ -1,30 +1,41 @@
 const News = require('../dtos/newsDTO');
+const userModel = require('./userModel');
 
 async function createNews(req, res){
-    const news = new News({
-        title: req.body.title,
-        url: req.body.url,
-        source: req.body.source,
-        newsCategory: req.body.newsCategory
-    });
-    news.save()
-    .then((result) => {
-        res.status(201).json({
-        error: false,
-        message: "The news have been created",
-        data: result,
+    try{
+        await userModel.verifyToken(req,res);
+        const news = new News({
+            title: req.body.title,
+            url: req.body.url,
+            source: req.body.source,
+            newsCategory: req.body.newsCategory
         });
-    }).catch((error) => {
-        res.status(404).json({
+        news.save()
+        .then((result) => {
+            res.status(201).json({
+            error: false,
+            message: "The news have been created",
+            data: result,
+            });
+        }).catch((error) => {
+            res.status(404).json({
+                error: true,
+                message: `Server error: ${error}`,
+            });
+        });
+    }catch(error){
+        res.status(500).json({
             error: true,
-            message: `Server error: ${error}`,
+            message: `Fatal Error: ${error}`,
+            code: 0
         });
-    });
+    }
 }
 
 async function getNews(req, res){
     try{
-        const news = await news.findOne({_id: req.body._id});
+        await userModel.verifyToken(req,res);
+        const news = await News.findOne({_id: req.body._id});
         res.status(200).json({news});
     } catch(error){
         res.status(500).json({ error: error.message });
@@ -42,7 +53,8 @@ async function updateNews(req, res){
     };
 
     try{
-        const result = await news.findOneAndUpdate({ _id: newsId}, { $set: updatedData });
+        await userModel.verifyToken(req,res);
+        const result = await News.findOneAndUpdate({ _id: newsId}, { $set: updatedData });
         console.log(result);
         if (result) {
             res.status(200).json({
@@ -59,7 +71,7 @@ async function updateNews(req, res){
         res.status(500).json({
             result: false,
             message: 'An error has been ocurred while the news was modified',
-            error: error
+            error: error.message
         })
     }
 }
@@ -72,6 +84,7 @@ async function deleteNews(req, res){
     }
 
     try{
+        await userModel.verifyToken(req,res);
         const result = await News.findOneAndUpdate({ _id: newsId}, { $set: deleteData });
         console.log(result);
         if (result) {
