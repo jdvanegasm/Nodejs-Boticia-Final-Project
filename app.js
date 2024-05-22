@@ -25,7 +25,7 @@ const swaggerSpec = {
 
 }
 // Rutas - Ejemplos (End points iniciales)
-app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
 //Funcion que conecta a la DB usando la URL del sevidor de mongoose
