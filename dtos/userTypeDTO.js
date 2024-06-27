@@ -12,4 +12,4 @@ const userTypeSchema = new mongoose.Schema({
 // Crear el modelo 'UserType' basado en el esquema
 const UserType = mongoose.model('UserType', userTypeSchema);
 
-module.exports = UserType; // Exportar el modelo para usarlo en otras partes de tu aplicación
+module.exports = UserType;
