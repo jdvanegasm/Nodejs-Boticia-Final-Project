@@ -5,8 +5,6 @@ const saltRounds = 10; // Número de rondas de sal. Cuanto mayor, más seguro, p
 
 async function createUser(req, res) {
     try{
-        // Espera a que se complete la verificación del token
-
         await verifyToken(req, res);
 
         // Generar un hash de la contraseña antes de almacenarla
@@ -34,14 +32,14 @@ async function createUser(req, res) {
             .catch(error => {
                 res.status(500).json({
                     error: true,
-                    message: `Fatal error: ${error}`
+                    message: `Internal Server Error: ${error}`
                 });
             });
         });
     }catch (error) {
-        res.status(500).json({
+        res.status(400).json({
             error: true,
-            message: `Fatal Error: ${error}`,
+            message: `Error: ${error}`,
             code: 0
         });
     }
@@ -73,9 +71,9 @@ async function login(req, res) {
             });
         }
     } catch (error) {
-        res.status(401).json({
+        res.status(500).json({
             error: true,
-            message: `Fatal error: ${error}`,
+            message: `Server error: ${error}`,
             code: 0
         });
     }
@@ -119,7 +117,7 @@ async function getUser(req, res) {
         const user = await User.findOne({_id: req.body._id});
         res.status(200).json({  user });
     } catch (error) {
-        res.status(500).json({
+        res.status(400).json({
             error: true,
             message: `Server error: ${error}`,
             code: 0
@@ -129,10 +127,11 @@ async function getUser(req, res) {
 
 async function getUserByDiscordId(req, res) {
     try {
+        await verifyToken(req, res);
         const user = await User.findOne({discordId: req.params.discordId});
         res.status(200).json({  user });
     } catch (error) {
-        res.status(500).json({
+        res.status(400).json({
             error: true,
             message: `Server error: ${error}`,
             code: 0
@@ -144,12 +143,14 @@ async function updateUser(req, res) {
     try {
         const userId = req.params.id;
         await verifyToken(req, res);
+
+        // Se encripta si se actualizó password
         if(req.body.password){
             bcrypt.hash(req.body.password, saltRounds, (err, hashedPassword) => {
                 if (err) {
                     return res.status(500).json({
                         result: false,
-                        message: `Fatal error: ${err}`
+                        message: `Error: ${err}`
                     });
                 }
                 
@@ -168,9 +169,9 @@ async function updateUser(req, res) {
                     });
                 })
                 .catch(error => {
-                    res.status(404).json({
+                    res.status(500).json({
                         error: true,
-                        message: `Fatal error: ${error}`
+                        message: `Error: ${error}`
                     });
                 });
             });
@@ -188,16 +189,16 @@ async function updateUser(req, res) {
                 });
             })
             .catch(error => {
-                res.status(404).json({
+                res.status(400).json({
                     error: true,
-                    message: `Fatal error: ${error}`
+                    message: `Error: ${error}`
                 });
             });
         }
     } catch (error) {
         res.status(500).json({
             result: false,
-            message: 'Fatal error',
+            message: 'Server error ' + error,
             error: error
         });
     }
@@ -221,7 +222,7 @@ async function deleteUser(req, res) {
                 message: 'The user has been deleted'
             });
         } else {
-            res.status(404).json({
+            res.status(400).json({
                 result: false,
                 message: 'Id doesnt match, try again later'
             });
@@ -229,7 +230,7 @@ async function deleteUser(req, res) {
     } catch (error) {
         res.status(500).json({
             result: false,
-            message: 'Fatal error',
+            message: 'Server error',
             error: error
         });
     }

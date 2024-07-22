@@ -18,7 +18,7 @@ async function createNews(req, res){
             data: result,
             });
         }).catch((error) => {
-            res.status(404).json({
+            res.status(400).json({
                 error: true,
                 message: `Server error: ${error}`,
             });
@@ -26,7 +26,7 @@ async function createNews(req, res){
     }catch(error){
         res.status(500).json({
             error: true,
-            message: `Fatal Error: ${error}`,
+            message: `Server error: ${error}`,
             code: 0
         });
     }
@@ -38,7 +38,7 @@ async function getNews(req, res){
         const news = await News.findOne({_id: req.body._id});
         res.status(200).json({news});
     } catch(error){
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ error: error });
     }
 }
 
@@ -64,7 +64,7 @@ async function updateNews(req, res){
         } else {
             res.status(404).json({
                 result: false,
-                message: 'fatal error'
+                message: ''
             });
         }
     } catch(error){
@@ -95,7 +95,7 @@ async function deleteNews(req, res){
         } else {
             res.status(404).json({
                 result: false,
-                message: 'fatal error'
+                message: ''
             });
         }
     } catch(error){

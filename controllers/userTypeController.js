@@ -10,20 +10,19 @@ const userTypeModel = require('../models/userTypeModel');
  *      UserType:
  *          type: object
  *          properties:
- *              nickName:
+ *              name:
  *                  type: String
- *                  description: Nombre del UserType
+ *                  description: Nombre de reconocimiento
  *              interestCategory:
  *                  type: [objectId]
- *                  description: Categorias de interes del userType
+ *                  description: Lista de categorias de interes
  *              status:
  *                  type: Boolean
- *                  description: Estado del UserType
+ *                  description: Estado actual
  *          required:
- *              - nickName
+ *              - name
  *          example:
- *              nickName: Estoico
- *              interestCategory: Array (empty)
+ *              name: "Estoico"
  * 
  * 
  */
@@ -34,6 +33,8 @@ const userTypeModel = require('../models/userTypeModel');
  *  post:
  *      summary: Crea un nuevo userType
  *      tags: [UserType]
+ *      security:
+ *          - ApiKeyAuth: []
  *      requestBody:
  *          required: true
  *          content:
@@ -44,8 +45,8 @@ const userTypeModel = require('../models/userTypeModel');
  *      responses:
  *          201:
  *              description: UserType creado
- *          404:
- *              description: Fatal error database
+ *          500:
+ *              description: Error en la inserción
  *                  
  * 
  */
@@ -57,18 +58,25 @@ router.post('/createUserType', userTypeModel.createUserType);
  *  post:
  *      summary: Trae un userType según su id
  *      tags: [UserType]
+ *      security:
+ *          - ApiKeyAuth: []
  *      requestBody:
  *          required: true
  *          content:
  *           application/json:
  *              schema:
  *                  type: object
- *                  $ref: '#/components/schemas/UserType'
+ *                  properties:
+ *                      _id:
+ *                          type: String
+ *                          description: Id del objeto
+ *                  example:               
+ *                      _id: "669edf37fc81a636d97efdf5"
  *      responses:
  *          200:
  *              description: UserType encontrado
  *          500:
- *              description: UserType no encontrado
+ *              description: Error en la busqueda
  *                  
  * 
  */
@@ -76,10 +84,17 @@ router.post('/getUserType', userTypeModel.getUserType);
 
 /**
  * @swagger
- * /userType/updateUserType/:id:
+ * /userType/updateUserType/{id}:
  *  put:
  *      summary: Actualiza un userType según su id
  *      tags: [UserType]
+ *      security:
+ *          - ApiKeyAuth: []
+ *      parameters:
+ *          - name: id
+ *            in: path
+ *            required: true
+ *            example: "669edf37fc81a636d97efdf5"
  *      requestBody:
  *          required: true
  *          content:
@@ -90,8 +105,10 @@ router.post('/getUserType', userTypeModel.getUserType);
  *      responses:
  *          200:
  *              description: UserType actualizado
- *          404:
- *              description: Error interno no fue posible actualizar
+ *          400:
+ *              description: Error en la busqueda de tipo a actualizar
+ *          500:
+ *              description: Error en el servidor
  *                  
  * 
  */
@@ -99,22 +116,24 @@ router.put('/updateUserType/:id', userTypeModel.updateUserType);
 
 /**
  * @swagger
- * /userType/deleteUserType/:id:
+ * /userType/deleteUserType/{id}:
  *  put:
  *      summary: Actualiza status como false a un userType según su id
  *      tags: [UserType]
- *      requestBody:
- *          required: true
- *          content:
- *           application/json:
- *              schema:
- *                  type: object
- *                  $ref: '#/components/schemas/UserType'
+ *      security:
+ *          - ApiKeyAuth: []
+ *      parameters:
+ *          - name: id
+ *            in: path
+ *            required: true
+ *            example: "669edf37fc81a636d97efdf5"
  *      responses:
  *          200:
  *              description: UserType eliminado
- *          404:
- *              description: Error interno no fue posible actualizar
+ *          400:
+ *              description: Error en la busqueda de tipo a eliminar
+ *          500:
+ *              description: Error en el servidor
  *                  
  * 
  */

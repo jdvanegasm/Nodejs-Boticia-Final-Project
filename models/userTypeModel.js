@@ -5,7 +5,7 @@ async function createUserType(req, res){
     try{
         await userModel.verifyToken(req,res);
         const userType = new UserType({
-            nickName: req.body.nickName,
+            name: req.body.name,
             interestCategory: req.body.interestCategory
         });
         userType.save()
@@ -16,7 +16,7 @@ async function createUserType(req, res){
             data: result,
             });
         }).catch((error) => {
-            res.status(404).json({
+            res.status(500).json({
                 error: true,
                 message: `Server error: ${error}`,
             });
@@ -24,7 +24,7 @@ async function createUserType(req, res){
     }catch(error){
         res.status(500).json({
             error: true,
-            message: `Fatal Error: ${error}`,
+            message: `Error: ${error}`,
             code: 0
         });
     }
@@ -44,27 +44,26 @@ async function updateUserType(req, res){
     const userTypeId = req.params.id;
 
     const updatedData = {
-        nickName: req.body.nickName,
+        name: req.body.name,
         interestCategory: req.body.interestCategory
     };
 
     try{
         await userModel.verifyToken(req,res);
         const result = await UserType.findOneAndUpdate({ _id: userTypeId}, { $set: updatedData });
-        console.log(result);
         if (result) {
             res.status(200).json({
                 result: true,
                 message: 'The user has been modified'
             });
         } else {
-            res.status(404).json({
+            res.status(400).json({
                 result: false,
-                message: 'fatal error'
+                message: ''
             });
         }
     } catch(error){
-        res.status(404).json({
+        res.status(500).json({
             result: false,
             message: 'An error has been ocurred while the user was modified',
             error: error
@@ -89,9 +88,9 @@ async function deleteUserType(req, res){
                 message: 'The user has been deleted'
             });
         } else {
-            res.status(404).json({
+            res.status(400).json({
                 result: false,
-                message: 'fatal error'
+                message: ''
             });
         }
     } catch(error){

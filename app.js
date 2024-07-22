@@ -15,9 +15,22 @@ const swaggerSpec = {
         title: "API Proyecto ACM",
         version: "1.0.0"
       },
+      components:{
+        securitySchemes:{
+          ApiKeyAuth:{
+            type: "apiKey",
+            in: "header",
+            name: "Authorization"
+          }
+        }
+      },
+      security: [
+        {ApiKeyAuth:[]}
+      ]
+      ,
       servers: [
         {
-          url: "http://localhost:3000"
+          url: `http://localhost:${port}`
         }
       ],
     },
