@@ -15,9 +15,22 @@ const swaggerSpec = {
         title: "API Proyecto ACM",
         version: "1.0.0"
       },
+      components:{
+        securitySchemes:{
+          ApiKeyAuth:{
+            type: "apiKey",
+            in: "header",
+            name: "Authorization"
+          }
+        }
+      },
+      security: [
+        {ApiKeyAuth:[]}
+      ]
+      ,
       servers: [
         {
-          url: "http://localhost:3000"
+          url: `http://localhost:${port}`
         }
       ],
     },
@@ -29,7 +42,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
 //Funcion que conecta a la DB usando la URL del sevidor de mongoose
-mongoose.connect('mongodb+srv://JDVM:EY85oVuSZkVjYxhk@cluster0.p2ovi4c.mongodb.net/BoticiaDB?retryWrites=true&w=majority')
+mongoose.connect(`${process.env.DB_URL}`)
     .then(() => console.log('mongodb connection up'))
     .catch(error => console.log(`unable to connect to mongodb: ${error.message}`));
 

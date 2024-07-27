@@ -9,4 +9,4 @@ const categoriesSchema = new mongoose.Schema({
 // Crear el modelo 'User' basado en el esquema
 const category = mongoose.model('Categorie', categoriesSchema);
 
-module.exports = category; // Exportar el modelo para usarlo en otras partes de tu aplicación
+module.exports = category;

@@ -10,10 +10,10 @@ const categoryModel = require('../models/categoryModel');
  *          properties:
  *              categoryName:
  *                  type: String
- *                  description: Nombre de la categoria
+ *                  description: Nombre
  *              status:
  *                  type: Boolean
- *                  description: Estado de la Categoria
+ *                  description: Estado actual
  *          required:
  *              - categoryName
  *          example:
@@ -27,8 +27,10 @@ const categoryModel = require('../models/categoryModel');
  * @swagger
  * /category/createCategory:
  *  post:
- *      summary: Crea una nueva Category
+ *      summary: Crea una nueva categoría de noticia
  *      tags: [Category]
+ *      security:
+ *          - ApiKeyAuth: []
  *      requestBody:
  *          required: true
  *          content:
@@ -37,10 +39,12 @@ const categoryModel = require('../models/categoryModel');
  *                  type: object
  *                  $ref: '#/components/schemas/Category'
  *      responses:
- *          201:
- *              description: Category creada
- *          404:
- *              description: Fatal error database
+ *          200:
+ *              description: Categoría creada
+ *          400:
+ *              description: Datos faltantes
+ *          500:
+ *              description: Error en el servidor
  *                  
  * 
  */
@@ -50,20 +54,27 @@ router.post('/createCategory', categoryModel.createCategory);
  * @swagger
  * /category/getCategory:
  *  post:
- *      summary: Trae una Category según su id
+ *      summary: Trae una categoría de noticia según su id
  *      tags: [Category]
+ *      security:
+ *          - ApiKeyAuth: []
  *      requestBody:
  *          required: true
  *          content:
  *           application/json:
  *              schema:
  *                  type: object
- *                  $ref: '#/components/schemas/Category'
+ *                  properties:
+ *                      _id:
+ *                          type: String
+ *                          description: Id del objeto
+ *                  example:               
+ *                      _id: "669ed70bf50a58982909440d"
  *      responses:
  *          200:
- *              description: Category encontrada
+ *              description: Categoría encontrada
  *          500:
- *              description: Category no encontrada
+ *              description: Error en la busqueda
  *                  
  * 
  */
@@ -71,10 +82,17 @@ router.post('/getCategory', categoryModel.getCategory);
 
 /**
  * @swagger
- * /category/updateCategory/:id:
+ * /category/updateCategory/{id}:
  *  put:
- *      summary: Actualiza una Category según su id
+ *      summary: Actualiza una categoría de noticia según su id
  *      tags: [Category]
+ *      security:
+ *          - ApiKeyAuth: []
+ *      parameters:
+ *          - name: id
+ *            in: path
+ *            required: true
+ *            example: "669ed70bf50a58982909440d"
  *      requestBody:
  *          required: true
  *          content:
@@ -84,9 +102,11 @@ router.post('/getCategory', categoryModel.getCategory);
  *                  $ref: '#/components/schemas/Category'
  *      responses:
  *          200:
- *              description: Category actualizada
- *          404:
- *              description: Error interno no fue posible actualizar
+ *              description: Categoría actualizado
+ *          400:
+ *              description: Error en la busqueda de categoría a actualizar
+ *          500:
+ *              description: Error en el servidor
  *                  
  * 
  */
@@ -94,17 +114,24 @@ router.put('/updateCategory/:id', categoryModel.updateCategory);
 
 /**
  * @swagger
- * /category/deleteCategory/:id:
+ * /category/deleteCategory/{id}:
  *  put:
- *      summary: Actualiza status false una Category según su id
+ *      summary: Actualiza status false una categoría de noticia según su id
  *      tags: [Category]
- *      requestBody:
- *          required: false
+ *      security:
+ *          - ApiKeyAuth: []
+ *      parameters:
+ *          - name: id
+ *            in: path
+ *            required: true
+ *            example: "669ed70bf50a58982909440d"
  *      responses:
  *          200:
- *              description: Category eliminada
- *          404:
- *              description: Error interno no fue posible actualizar
+ *              description: Estado de categoría actualizado a falso
+ *          400:
+ *              description: Error en la busqueda de categoría a eliminar
+ *          500:
+ *              description: Error en el servidor
  *                  
  * 
  */
